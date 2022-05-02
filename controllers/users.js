@@ -52,12 +52,9 @@ const usersPut = async (req = request, res = response) => {
   res.json(usuario);
 };
 
-// ? DELETE USERS
+// ! DELETE USERS
 const usersDelete = async (req = request, res = response) => {
   const { id } = req.params;
-
-  // ! Borrar fisicamente
-  // const user = await User.findByIdAndDelete( id );
 
   // * Cambiar estado
   const user = await User.findByIdAndUpdate( id, { state: false } );
