@@ -4,9 +4,62 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome</title>
+  <title>Google Sign In</title>
 </head>
 <body>
-  <h1>Bienvenido</h1>
+  <h1>Google Sign In</h1>
+  <hr>
+
+  <div id="g_id_onload"
+    data-client_id="68930709155-ef51a7j65g7jm0jp0a9l8b4hr35p5mjb.apps.googleusercontent.com"
+    data-callback="handleCredentialResponse"
+    data-auto_prompt="false">
+  </div>
+  <div class="g_id_signin"
+    data-type="standard"
+    data-size="large"
+    data-theme="outline"
+    data-text="sign_in_with"
+    data-shape="rectangular"
+    data-logo_alignment="left">
+  </div>
+
+  <button id="google-signout">
+    Sign out
+  </button>
+
+  <script>
+    function handleCredentialResponse(response) {
+      //  console.log('id_token', response.credential)
+
+      const body = { id_token : response.credential }
+
+      fetch('http://localhost:8080/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+      })
+        .then( resp => resp.json() )
+        .then( resp => {
+          console.log(resp);
+          localStorage.setItem('email', resp.user.email);
+        } )
+        .catch( err => {
+          console.error(err)
+        } )
+    }
+
+    const button = document.getElementById('google-signout');
+
+    button.addEventListener('click',  async (e) => {
+      google.accounts.id.revoke( localStorage.getItem('email'), (done) => {
+        localStorage.clear();
+        location.reload();
+      } )
+    })
+  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>
 </html>

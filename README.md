@@ -15,8 +15,7 @@ npm install
 
 ## Built with 
 
-- Javascript
-- Nodejs
+- Javascript (NodeJs)
 - MongoDB
 
 ### Packages
