@@ -11,7 +11,7 @@ const isAdminRol = (req = request, res = response, next) => {
 
   if (role !== 'ADMIN_ROLE') {
     return res.status(401).json({
-      message: `${name} no es administrados - se necesita ser administrador`,
+      message: `${name} no es administrador - se necesita ser administrador`,
     });
   } else {
     next();

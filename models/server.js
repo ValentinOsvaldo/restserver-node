@@ -4,15 +4,16 @@ const { dbConnection } = require('../database/config');
 
 class Server {
   constructor() {
-    this.app       = express();
-    this.port      = process.env.PORT;
+    this.app = express();
+    this.port = process.env.PORT;
 
     this.paths = {
-      authPath      : '/api/auth',
+      authPath: '/api/auth',
+      buscarPath: '/api/buscar',
       categoriasPath: '/api/categorias',
-      usersPath     : '/api/users',
-    }
-
+      productosPath: '/api/productos',
+      usersPath: '/api/users',
+    };
 
     // Conectar a DB
     this.conectarDb();
@@ -41,13 +42,15 @@ class Server {
 
   routes() {
     this.app.use(this.paths.authPath, require('../routes/auth'));
+    this.app.use(this.paths.buscarPath, require('../routes/buscar'));
     this.app.use(this.paths.categoriasPath, require('../routes/categorias'));
     this.app.use(this.paths.usersPath, require('../routes/users'));
+    this.app.use(this.paths.productosPath, require('../routes/productos'));
   }
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log(`Example app listening on port ${this.port}`);
+      console.log(`🚀 Servidor corriendo en el puerto ${this.port}`);
     });
   }
 }

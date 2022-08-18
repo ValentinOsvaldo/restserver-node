@@ -1,34 +1,64 @@
 const { Router } = require('express');
-const { check } = require('express-validator')
+const { check } = require('express-validator');
+const {
+  crearCategoria,
+  obtenerCategorias,
+  obtenerCategoria,
+  actualizarCategoria,
+  borrarCategoria,
+} = require('../controllers/categorias');
+const { existCategoryId } = require('../helpers/db-validators');
 
-const { validarCampos } = require('../middlewares/validar-campos');
+const { validarCampos, validarJWT, isAdminRol } = require('../middlewares');
 
 const router = Router();
 
-// todo: obtener todas las categorias - public
-router.get('/', (req, res) => {
-  res.json('get')
-})
+router.get('/', obtenerCategorias);
 
-// todo: obtener una categoria - public
-router.get('/:id', (req, res) => {
-  res.json('get - id')
-})
+router.get(
+  '/:id',
+  [
+    check('id', 'No es un ID de Mongo').isMongoId(),
+    check('id').custom(existCategoryId),
+    validarCampos,
+  ],
+  obtenerCategoria
+);
 
-// todo: Crear categoria - privado - cualquier persona con un token valido
+router.post(
+  '/',
+  [
+    validarJWT,
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    validarCampos,
+  ],
+  crearCategoria
+);
 
-router.post('/', (req, res) => {
-  res.json('post')
-})
-
-// todo: Actualizar - privado - cualquier con token valido 
-router.put('/:id', (req, res) => {
-  res.json('put')
-})
+// todo: Actualizar - privado - cualquier con token valido
+router.put(
+  '/:id',
+  [
+    validarJWT,
+    check('id', 'No es un ID de Mongo').isMongoId(),
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('id').custom(existCategoryId),
+    validarCampos,
+  ],
+  actualizarCategoria
+);
 
 // todo: borrar una categoria - admin
-router.delete('/:id', (req, res) => {
-  res.json('delete')
-})
+router.delete(
+  '/:id',
+  [
+    validarJWT,
+    isAdminRol,
+    check('id', 'No es un ID de Mongo').isMongoId(),
+    check('id').custom(existCategoryId),
+    validarCampos,
+  ],
+  borrarCategoria
+);
 
 module.exports = router;
