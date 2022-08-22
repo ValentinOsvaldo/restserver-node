@@ -34,13 +34,23 @@ const existCategoryId = async (id) => {
 const existProductId = async (id) => {
   const existProduct = await Producto.findById(id);
 
-  if (!existProduct) throw new Error('No existe ese ID para este producto')
-}
+  if (!existProduct) throw new Error('No existe ese ID para este producto');
+};
+
+const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
+  const incluida = colecciones.includes(coleccion);
+
+  if (!incluida)
+    throw new Error(`La colección ${coleccion} no es permitida, ${colecciones}`);
+
+  return true;
+};
 
 module.exports = {
   isValidRole,
   emailExist,
   existUserId,
   existCategoryId,
-  existProductId
+  existProductId,
+  coleccionesPermitidas,
 };
