@@ -103,11 +103,11 @@ const mostrarImagen = async (req, res = response) => {
 
   /* Checking if the image exists and if it does, it will send the image. */
   if (modelo.img) {
-    const pathImage = path.join(__dirname, '../uploads', coleccion, modelo.img);
-
-    if (fs.existsSync(pathImage)) {
-      return res.sendFile(pathImage);
-    }
+    // const pathImage = path.join(__dirname, '../uploads', coleccion, modelo.img);
+    // if (fs.existsSync(pathImage)) {
+    //   return res.sendFile(pathImage);
+    // }
+    return res.redirect(modelo.img)
   }
 
   const pathImage = path.join(__dirname, '../assets', 'no-image.jpg');
